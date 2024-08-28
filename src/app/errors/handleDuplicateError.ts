@@ -17,7 +17,7 @@ export const handleDuplicateError = (err: any): TGenericErrorResponse => {
 
   return {
     statusCode,
-    message: 'Validation Error',
+    message: 'already exist',
     errorSources,
   };
 };
