@@ -12,7 +12,7 @@ const userSchema = new Schema<TUser>({
     required: true,
     select: 0,
   },
-  phone: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
   role: {
     type: String,
     enum: ['admin', 'user'],

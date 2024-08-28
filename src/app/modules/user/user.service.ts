@@ -11,7 +11,16 @@ const getUserIntoDB = async (email: string) => {
   return user;
 };
 
+const updateUserFromDB = async (email: string, payload: TUser) => {
+  const result = await User.findOneAndUpdate({ email }, payload, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getUserIntoDB,
+  updateUserFromDB,
 };
