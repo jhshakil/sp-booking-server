@@ -6,6 +6,7 @@ const createFacilityValidation = z.object({
     description: z.string(),
     pricePerHour: z.number(),
     location: z.string(),
+    image: z.string().optional(),
     isDeleted: z.boolean().optional(),
   }),
 });
@@ -16,6 +17,7 @@ const updateFacilityValidation = z.object({
     description: z.string().optional(),
     pricePerHour: z.number().optional(),
     location: z.string().optional(),
+    image: z.string().optional(),
     isDeleted: z.boolean().optional(),
   }),
 });
