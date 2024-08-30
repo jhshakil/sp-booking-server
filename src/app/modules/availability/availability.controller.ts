@@ -3,7 +3,8 @@ import sendResponse from '../../utils/sendResponse';
 import { AvailabilityServices } from './availability.service';
 
 const checkAvailability = catchAsync(async (req, res) => {
-  let date = req.query.date;
+  let date = req.body.date;
+  const facility = req.body.facility;
 
   if (!date) {
     const dateObj = new Date();
@@ -17,6 +18,7 @@ const checkAvailability = catchAsync(async (req, res) => {
 
   const result = await AvailabilityServices.checkingAvailability(
     date as string,
+    facility as string,
   );
 
   sendResponse(res, {

@@ -1,8 +1,11 @@
 import { Booking } from '../booking/booking.model';
 import { findAvailableSlots } from './availability.utils';
 
-const checkingAvailability = async (date: string) => {
-  const bookings = await Booking.find({ date }).select('startTime endTime');
+const checkingAvailability = async (date: string, facility: string) => {
+  const bookings = await Booking.find({
+    date,
+    facility,
+  }).select('startTime endTime');
   let result;
   if (bookings && bookings.length) {
     result = findAvailableSlots(bookings);

@@ -3,6 +3,6 @@ import { AvailabilityControllers } from './availability.controller';
 
 const router = Router();
 
-router.get('/', AvailabilityControllers.checkAvailability);
+router.post('/', AvailabilityControllers.checkAvailability);
 
 export const AvailabilityRoutes = router;
