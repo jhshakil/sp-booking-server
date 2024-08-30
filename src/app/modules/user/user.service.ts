@@ -6,6 +6,11 @@ const createUserIntoDB = async (payload: TUser) => {
   return user;
 };
 
+const getAllUserIntoDB = async () => {
+  const user = await User.find();
+  return user;
+};
+
 const getUserIntoDB = async (email: string) => {
   const user = await User.findOne({ email });
   return user;
@@ -21,6 +26,7 @@ const updateUserFromDB = async (email: string, payload: TUser) => {
 
 export const UserServices = {
   createUserIntoDB,
+  getAllUserIntoDB,
   getUserIntoDB,
   updateUserFromDB,
 };

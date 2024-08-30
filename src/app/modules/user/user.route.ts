@@ -10,6 +10,7 @@ router.post(
   validateRequest(UserValidations.createUserValidationSchema),
   UserControllers.createUser,
 );
+router.get('/user', UserControllers.getAllUser);
 router.get('/user/:email', UserControllers.getUser);
 router.patch(
   '/user/:email',

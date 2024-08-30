@@ -11,6 +11,14 @@ const createUser = catchAsync(async (req, res) => {
     data: '',
   });
 });
+const getAllUser = catchAsync(async (req, res) => {
+  const result = await UserServices.getAllUserIntoDB();
+
+  sendResponse(res, {
+    message: 'Get users successfully',
+    data: result,
+  });
+});
 const getUser = catchAsync(async (req, res) => {
   const result = await UserServices.getUserIntoDB(req.params.email);
 
@@ -41,6 +49,7 @@ const updateUser = catchAsync(async (req, res) => {
 
 export const UserControllers = {
   createUser,
+  getAllUser,
   getUser,
   updateUser,
 };
