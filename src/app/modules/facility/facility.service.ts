@@ -1,3 +1,5 @@
+import QueryBuilder from '../../builder/QueryBuilder';
+import { facilitySearchableFields } from './facility.constant';
 import { TFacility } from './facility.interface';
 import { Facility } from './facility.model';
 
@@ -24,8 +26,15 @@ const deleteFacilityFromDB = async (id: string) => {
   return result;
 };
 
-const getAllFacilityFromDB = async () => {
-  const result = await Facility.find({ isDeleted: { $ne: true } });
+const getAllFacilityFromDB = async (query: Record<string, unknown>) => {
+  const productQuery = new QueryBuilder(Facility.find(), query)
+    .search(facilitySearchableFields)
+    .filterLimit('pricePerHour')
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await productQuery.modelQuery;
   return result;
 };
 

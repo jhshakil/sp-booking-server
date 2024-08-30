@@ -10,6 +10,16 @@ const facilitySchema = new Schema<TFacility>({
   isDeleted: { type: Boolean, default: false },
 });
 
+facilitySchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+facilitySchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+
+  next();
+});
+
 // Modify toJSON method to remove the password
 facilitySchema.methods.toJSON = function () {
   // eslint-disable-next-line @typescript-eslint/no-this-alias

@@ -41,7 +41,7 @@ const deleteFacility = catchAsync(async (req, res) => {
 });
 
 const getAllFacility = catchAsync(async (req, res) => {
-  const result = await FacilityServices.getAllFacilityFromDB();
+  const result = await FacilityServices.getAllFacilityFromDB(req.query);
 
   result && result.length
     ? sendResponse(res, {
