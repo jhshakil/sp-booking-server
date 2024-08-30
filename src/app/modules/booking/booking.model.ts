@@ -10,6 +10,7 @@ const bookingSchema = new Schema<TBooking>({
   facility: { type: Schema.Types.ObjectId, ref: 'Facility', required: true },
   payableAmount: { type: Number, required: true },
   isBooked: { type: String, enum: BookingStatus, default: 'unconfirmed' },
+  isPayment: { type: Boolean, default: false },
 });
 
 bookingSchema.pre('find', function (next) {
