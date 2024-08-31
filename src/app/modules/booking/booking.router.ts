@@ -18,4 +18,6 @@ router.get('/', auth(USER_ROLE.admin), BookingControllers.getAllBookings);
 router.get('/user', auth(USER_ROLE.user), BookingControllers.getSingleBooking);
 router.delete('/:id', auth(USER_ROLE.user), BookingControllers.cancelBooking);
 
+router.post('/confirmation', BookingControllers.confirmPayment);
+
 export const BookingRoutes = router;

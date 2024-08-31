@@ -5,6 +5,10 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 import { hasTimeConflict } from './booking.utils';
+import { v4 } from 'uuid';
+import { initiatePayment, verifyPayment } from '../../utils/payment.utils';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 const createBookingIntoDB = async (payload: TBooking, user: string) => {
   const { date, startTime, endTime } = payload;
@@ -47,8 +51,21 @@ const createBookingIntoDB = async (payload: TBooking, user: string) => {
       'This booking slot is not available at that time ! Choose other time or day',
     );
 
-  const result = await Booking.create(mainData);
-  return result;
+  await Booking.create(mainData);
+  const transactionId = `TXN-${v4()}`;
+
+  const paymentData = {
+    transactionId,
+    totalPrice: payableAmount,
+    customerName: userData.name,
+    customerEmail: userData.email,
+    customerPhone: userData.phone,
+  };
+
+  //payment
+  const paymentSession = await initiatePayment(paymentData);
+
+  return paymentSession;
 };
 
 const getAllBookingsFromDB = async () => {
@@ -75,9 +92,35 @@ const cancelBookingIntoDB = async (id: string) => {
   return result;
 };
 
+const confirmationService = async (transactionId: string) => {
+  const verifyResponse = await verifyPayment(transactionId);
+
+  let message = '';
+
+  if (verifyResponse && verifyResponse.pay_status === 'Successful') {
+    await Booking.findOneAndUpdate(
+      { transactionId },
+      {
+        isPayment: true,
+      },
+    );
+    message = 'Successfully Paid!';
+  } else {
+    message = 'Payment Failed!';
+  }
+
+  const filePath = join(__dirname, '../../../../public/view/confirmation.html');
+  let template = readFileSync(filePath, 'utf-8');
+
+  template = template.replace('{{message}}', message);
+
+  return template;
+};
+
 export const BookingServices = {
   createBookingIntoDB,
   getAllBookingsFromDB,
   getSingleBookingFromDB,
   cancelBookingIntoDB,
+  confirmationService,
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
 import { TBooking } from './booking.interface';
 import { BookingStatus } from './booking.constant';
@@ -11,11 +12,21 @@ const bookingSchema = new Schema<TBooking>({
   payableAmount: { type: Number, required: true },
   isBooked: { type: String, enum: BookingStatus, default: 'unconfirmed' },
   isPayment: { type: Boolean, default: false },
+  transactionId: { type: String },
 });
 
 bookingSchema.pre('find', function (next) {
   this.find({ isBooked: { $ne: 'canceled' } });
   next();
 });
+
+// Modify toJSON method to remove the password
+bookingSchema.methods.toJSON = function () {
+  const booking = this;
+  const bookingObject = booking.toObject();
+
+  delete bookingObject.transactionId;
+  return bookingObject;
+};
 
 export const Booking = model<TBooking>('Booking', bookingSchema);

@@ -56,9 +56,19 @@ const cancelBooking = catchAsync(async (req, res) => {
   });
 });
 
+const confirmPayment = catchAsync(async (req, res) => {
+  const { transactionId } = req.query;
+  const result = await BookingServices.confirmationService(
+    transactionId as string,
+  );
+
+  res.send(result);
+});
+
 export const BookingControllers = {
   createBooking,
   getAllBookings,
   getSingleBooking,
   cancelBooking,
+  confirmPayment,
 };
