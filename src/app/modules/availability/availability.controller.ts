@@ -3,8 +3,8 @@ import sendResponse from '../../utils/sendResponse';
 import { AvailabilityServices } from './availability.service';
 
 const checkAvailability = catchAsync(async (req, res) => {
-  let date = req.body.date;
-  const facility = req.body.facility;
+  let date = req.query.date;
+  const facility = req.query.facility;
 
   if (!date) {
     const dateObj = new Date();

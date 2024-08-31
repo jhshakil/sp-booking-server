@@ -21,6 +21,11 @@ router.get(
   BookingControllers.getUserBookings,
 );
 router.delete('/:id', auth(USER_ROLE.user), BookingControllers.cancelBooking);
+router.patch(
+  '/confirm/:id',
+  auth(USER_ROLE.admin),
+  BookingControllers.confirmBooking,
+);
 
 router.post('/confirmation', BookingControllers.confirmPayment);
 

@@ -92,6 +92,15 @@ const cancelBookingIntoDB = async (id: string) => {
 
   return result;
 };
+const confirmBookingIntoDB = async (id: string) => {
+  const result = await Booking.findOneAndUpdate(
+    { _id: id },
+    { isBooked: 'confirmed' },
+    { new: true },
+  );
+
+  return result;
+};
 
 const confirmationService = async (transactionId: string) => {
   const verifyResponse = await verifyPayment(transactionId);
@@ -99,7 +108,7 @@ const confirmationService = async (transactionId: string) => {
   let message = '';
 
   if (verifyResponse && verifyResponse.pay_status === 'Successful') {
-    const result = await Booking.findOneAndUpdate(
+    await Booking.findOneAndUpdate(
       { transactionId },
       {
         transactionId,
@@ -107,7 +116,6 @@ const confirmationService = async (transactionId: string) => {
       },
     );
 
-    console.log(result);
     message = 'Successfully Paid!';
   } else {
     message = 'Payment Failed!';
@@ -127,4 +135,5 @@ export const BookingServices = {
   getUserBookingsFromDB,
   cancelBookingIntoDB,
   confirmationService,
+  confirmBookingIntoDB,
 };
