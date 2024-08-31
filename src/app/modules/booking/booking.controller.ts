@@ -31,8 +31,8 @@ const getAllBookings = catchAsync(async (req, res) => {
       });
 });
 
-const getSingleBooking = catchAsync(async (req, res) => {
-  const result = await BookingServices.getSingleBookingFromDB(req.user.email);
+const getUserBookings = catchAsync(async (req, res) => {
+  const result = await BookingServices.getUserBookingsFromDB(req.params.email);
 
   result && result.length
     ? sendResponse(res, {
@@ -68,7 +68,7 @@ const confirmPayment = catchAsync(async (req, res) => {
 export const BookingControllers = {
   createBooking,
   getAllBookings,
-  getSingleBooking,
+  getUserBookings,
   cancelBooking,
   confirmPayment,
 };

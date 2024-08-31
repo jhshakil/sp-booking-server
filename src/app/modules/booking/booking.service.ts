@@ -22,6 +22,7 @@ const createBookingIntoDB = async (payload: TBooking, user: string) => {
 
   const id = payload.facility;
   const facility = await Facility.findById(id);
+  const transactionId = `TXN-${v4()}`;
 
   if (!facility)
     throw new AppError(httpStatus.NOT_FOUND, 'This facility is not found!');
@@ -33,6 +34,7 @@ const createBookingIntoDB = async (payload: TBooking, user: string) => {
     facility.pricePerHour;
 
   mainData.payableAmount = payableAmount;
+  mainData.transactionId = transactionId;
 
   // get the schedules of the bookings
   const assignedSchedules = await Booking.find({ date }).select(
@@ -52,7 +54,6 @@ const createBookingIntoDB = async (payload: TBooking, user: string) => {
     );
 
   await Booking.create(mainData);
-  const transactionId = `TXN-${v4()}`;
 
   const paymentData = {
     transactionId,
@@ -74,7 +75,7 @@ const getAllBookingsFromDB = async () => {
   return result;
 };
 
-const getSingleBookingFromDB = async (email: string) => {
+const getUserBookingsFromDB = async (email: string) => {
   const user = await User.findOne({ email });
   if (!user) throw new AppError(httpStatus.NOT_FOUND, 'User not found');
 
@@ -98,12 +99,15 @@ const confirmationService = async (transactionId: string) => {
   let message = '';
 
   if (verifyResponse && verifyResponse.pay_status === 'Successful') {
-    await Booking.findOneAndUpdate(
+    const result = await Booking.findOneAndUpdate(
       { transactionId },
       {
+        transactionId,
         isPayment: true,
       },
     );
+
+    console.log(result);
     message = 'Successfully Paid!';
   } else {
     message = 'Payment Failed!';
@@ -120,7 +124,7 @@ const confirmationService = async (transactionId: string) => {
 export const BookingServices = {
   createBookingIntoDB,
   getAllBookingsFromDB,
-  getSingleBookingFromDB,
+  getUserBookingsFromDB,
   cancelBookingIntoDB,
   confirmationService,
 };
