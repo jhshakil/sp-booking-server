@@ -37,9 +37,10 @@ const createBookingIntoDB = async (payload: TBooking, user: string) => {
   mainData.transactionId = transactionId;
 
   // get the schedules of the bookings
-  const assignedSchedules = await Booking.find({ date }).select(
-    'date startTime endTime',
-  );
+  const assignedSchedules = await Booking.find({
+    date,
+    facility: payload.facility,
+  }).select('date startTime endTime');
 
   const newSchedule = {
     date,
